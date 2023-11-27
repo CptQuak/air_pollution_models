@@ -1,0 +1,61 @@
+name: run data_action
+
+on:
+    workflow_dispatch:
+    # schedule:
+    #     - cron: '5 6 * * *' # run once a day at 06:05
+    
+jobs:
+  build:
+    permissions:
+      contents: write
+      pull-requests: write
+
+    runs-on: ubuntu-20.04
+
+    steps:
+      # checkout the repository content to github runner
+      - name: checkout repo content
+        uses: actions/checkout@v3
+
+            
+    # install the python version needed, install packages 
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+            python-version: '3.9.6'    
+            cache: 'pip'
+      - run: pip install -r requirements.txt
+
+
+      # donwload jsons from api
+      - name: download jsons 
+        working-directory: ./scripts
+        env:
+          owm_api_key: ${{ secrets.owm_api_key }}
+        run: python get_data.py
+
+      # update csvs
+      - name: update csv 
+        working-directory: ./scripts
+        run: python create_csv_files.py
+
+      # make new predictions
+      - name: Creates csvs with predictions
+        working-directory: ./ml_models
+        run: python make_predictions.py
+
+
+      # create pull requrest on specific branch
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: Update data
+          committer: CptQuak <kamilkulesza5@gmail.com>
+          body: |
+            Daily data update
+          title: '[Update] data'
+          labels: data, automated pr
+          assignees: CptQuak
+          reviewers: CptQuak
+          branch: action_data

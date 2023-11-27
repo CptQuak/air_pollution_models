@@ -1,0 +1,1 @@
+{'num_hidden': 150, 'enc_num_layers': 2, 'dec_num_layers': 1}

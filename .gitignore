@@ -1,0 +1,14 @@
+__pycache__
+.pytest_cache
+
+
+.env
+.venv
+.conda
+venv_mat
+
+
+data_test
+
+data/*
+!data/*.txt

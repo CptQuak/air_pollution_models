@@ -1,0 +1,15 @@
+Air Temperature,temp
+Apparent Temperature,feels_like
+Air Pressure,pressure
+Humidity,humidity
+Clouds,clouds.all
+Rain,rain.1h
+Snow,snow.1h
+CO,co
+NO,no
+NO2,no2
+O3,o3
+SO2,so2
+PM2_5,pm2_5
+PM10,pm10
+NH3,nh3

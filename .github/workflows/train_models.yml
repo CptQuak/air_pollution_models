@@ -1,0 +1,48 @@
+name: run models_actions
+
+on:
+    workflow_dispatch:
+    # push:
+    
+jobs:
+  build:
+    permissions:
+      contents: write
+      pull-requests: write
+
+    runs-on: ubuntu-20.04
+
+    steps:
+      # checkout the repository content to github runner
+      - name: checkout repo content
+        uses: actions/checkout@v3
+
+            
+    # install the python version needed, install packages 
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+            python-version: '3.9.6'    
+            cache: 'pip'
+      - run: pip install -r requirements.txt
+
+
+      # train models
+      - name: Train models
+        working-directory: ./ml_models
+        run: python train_models.py
+
+
+      # create pull requrest on specific branch
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: Update models
+          committer: CptQuak <kamilkulesza5@gmail.com>
+          body: |
+            Update models
+          title: '[Update] models'
+          labels: models, automated pr
+          assignees: CptQuak
+          reviewers: CptQuak
+          branch: update_models
